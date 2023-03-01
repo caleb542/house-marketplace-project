@@ -106,6 +106,8 @@ useEffect(() => {
 
     setLoading(true)
 
+    alert(typeof discountedPrice)
+    alert(typeof regularPrice)
     if (discountedPrice >= regularPrice) {
       setLoading(false)
       toast.error('The discounted price has to be lower than the regular price!')
