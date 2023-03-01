@@ -60,7 +60,7 @@ function EditListing() {
         toast.error('You cannot edit that listing')
         navigate('/')
     }
-  },[])
+  },[auth.currentUser.uid, listing, navigate])
   // Fetch listing to edit
   useEffect(() => {
         setLoading(true)

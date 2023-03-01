@@ -29,9 +29,7 @@ function Slider() {
                     data: doc.data()
                 })
             })
-
-            console.log('!!')
-            console.log(listings)
+            
             setListings(listings)
             setLoading(false)
         }   
