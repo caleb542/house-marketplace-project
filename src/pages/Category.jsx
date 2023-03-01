@@ -124,6 +124,7 @@ function Category() {
         </main>
         <br />
         <br />
+        <br />
         {lastFetchedListing && (
             <p 
             className="loadMore"
