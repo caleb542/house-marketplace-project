@@ -72,7 +72,7 @@ function CreateListing() {
 
     if (discountedPrice >= regularPrice) {
       setLoading(false)
-      toast.error('Discounted price needs to be less than regular price')
+      toast.error('The discounted price has to be lower than the regular price!')
       return
     }
 
