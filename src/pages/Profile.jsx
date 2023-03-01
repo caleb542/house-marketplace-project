@@ -98,7 +98,6 @@ function Profile() {
   }
 
   const onEdit = (listingId) => {
-    alert(`${listingId}`)
     navigate(`/edit-listing/${listingId}`)
   }
   return (
