@@ -71,6 +71,20 @@ button {
   align-items: center;
   justify-content: center;
 }
+.deleteButton{
+  cursor: pointer;
+  background: #0000;
+  border-radius: 1rem;
+  padding: 0.85rem 2rem;
+  color: #ffffff;
+  font-weight: 600;
+  font-size: 1.25rem;
+  margin: 0 auto;
+  display: flex;
+  align-items: top;
+  justify-content: center;
+}
+
 
 .removeIcon {
   cursor: pointer;
@@ -538,6 +552,21 @@ button {
 .listingDetailsList {
   padding: 0;
   list-style-type: none;
+}
+.propertyImages {
+  padding: 0;
+    list-style-type: none;
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    justify-content: left;
+    align-items: baseline;
+    gap: 20px;
+    flex-wrap: wrap;
+}
+.propertyImages li {
+
+
 }
 .listingDetailsList li {
   margin: 0.3rem 0;

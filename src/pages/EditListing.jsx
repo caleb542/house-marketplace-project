@@ -1,10 +1,13 @@
 import { useState, useEffect, useRef } from 'react'
 import { getAuth, onAuthStateChanged } from 'firebase/auth'
+import { ReactComponent as DeleteIcon } from '../assets/svg/deleteIcon.svg'
+
 import {
   getStorage,
   ref,
   uploadBytesResumable,
   getDownloadURL,
+  deleteObject
 } from 'firebase/storage'
 import { doc, updateDoc, getDoc, serverTimestamp } from 'firebase/firestore'
 import { db } from '../firebase.config'
@@ -74,7 +77,7 @@ function EditListing() {
             } else {
                 navigate('/')
                 toast.error('Listing does not exist')
-            }
+            }           
         }
         
 
@@ -113,11 +116,13 @@ useEffect(() => {
       return
     }
 
-    if (images.length > 6) {
+    console.log(`images : ${images}`)
+    if ((images.length) + (listing.imgUrls.length) > 6) {
       setLoading(false)
       toast.error('Max 6 images')
       return
     }
+   
 
     let geolocation = {}
     let location
@@ -188,14 +193,23 @@ useEffect(() => {
       })
     }
 
-    const imgUrls = await Promise.all(
+    let imgUrls = listing.imgUrls
+    const newImgUrls = await Promise.all(
       [...images].map((image) => storeImage(image))
+      
     ).catch(() => {
       setLoading(false)
       toast.error('Images not uploaded')
       return
     })
 
+    // For each additional image chosen,
+    // ... add to listing.imgUrls array
+    newImgUrls.forEach(url => {
+      imgUrls = [...imgUrls, url]
+    })
+    
+    // copy and update formData with new object formDataCopy
     const formDataCopy = {
       ...formData,
       imgUrls,
@@ -239,6 +253,72 @@ useEffect(() => {
         ...prevState,
         [e.target.id]: boolean ?? e.target.value,
       }))
+    }
+  }
+
+  const onDelete = async (imageUrl) => {
+
+    const storage = getStorage()
+
+    console.log(listing)
+
+    if(window.confirm('Are  you sure you want to delete?')){
+
+     let res = listing.imgUrls.filter(elements => {
+      return elements !== imageUrl;
+     });
+    
+      setListing({
+      ...listing,
+      imgUrls:res
+     })
+      // update the database listing
+      const formDataCopy = {
+        ...formData,
+        imgUrls:res,
+        timestamp: serverTimestamp(),
+      }
+      console.log("!!!")
+      console.log(res)
+  
+      formDataCopy.location = address
+      delete formDataCopy.images
+      delete formDataCopy.address
+      !formDataCopy.offer && delete formDataCopy.discountedPrice
+     
+      
+      // remove from the listing imgUrls
+      // Update listing
+    const docRef = doc(db, 'listings', params.listingId)
+    await updateDoc(docRef, formDataCopy)
+    toast.success('Listing saved')
+    navigate(`/category/${formDataCopy.type}/${docRef.id}`)
+      // delete from the storage
+      const desertRef = ref(storage, imageUrl)
+          
+    //     // Delete
+    deleteObject(desertRef).then(() => {
+          // File deleted successfully
+          // let removeThis = imageUrl
+
+          // const removeThisIndex = listing.imgUrls.findIndex(removeThis)
+          // const updatedImgUrls = listing.imgUrls.splice(removeThisIndex)
+          
+          // console.log(listing.imgUrls)
+          // console.log(updatedImgUrls)
+          
+          
+        toast.success('Successfully Deleted')
+        }
+        ).catch((error) => {
+          console.log(error)
+          toast.error('Not Successfully Deleted')
+        //   // Uh-oh, an error occurred!
+        });
+
+       
+       
+        
     }
   }
 
@@ -465,6 +545,23 @@ useEffect(() => {
           <p className='imagesInfo'>
             The first image will be the cover (max 6).
           </p>
+          <ul className="propertyImages">
+           {  listing.imgUrls && 
+              listing.imgUrls.map((referenceImage, index)=>(
+              <li key={index}>
+              <button className='btn deleteButton'>
+              <img src={referenceImage} alt='image' width='120' height='100' />
+                <DeleteIcon 
+                className='' 
+                fill="red" 
+                onClick={() => onDelete(referenceImage)}
+                /> 
+                </button>
+            
+            </li>
+
+          ))}             
+          </ul>
           <input
             className='formInputFile'
             type='file'
@@ -473,10 +570,11 @@ useEffect(() => {
             max='6'
             accept='.jpg,.png,.jpeg'
             multiple
-            required
+            
           />
+          
           <button type='submit' className='primaryButton editListingButton'>
-            Edit Listing
+            Update Listing
           </button>
         </form>
       </main>
