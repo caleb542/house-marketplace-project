@@ -260,7 +260,7 @@ useEffect(() => {
 
     const storage = getStorage()
 
-    console.log(listing)
+    // console.log(listing)
 
     if(window.confirm('Are  you sure you want to delete?')){
 
@@ -550,7 +550,7 @@ useEffect(() => {
               listing.imgUrls.map((referenceImage, index)=>(
               <li key={index}>
               <button className='btn deleteButton'>
-              <img src={referenceImage} alt='image' width='120' height='100' />
+              <img src={referenceImage} alt="property images" width='120' height='100' />
                 <DeleteIcon 
                 className='' 
                 fill="red" 
