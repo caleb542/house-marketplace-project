@@ -117,7 +117,7 @@ useEffect(() => {
     }
 
     console.log(`images : ${images}`)
-    if ((images.length) + (listing.imgUrls.length) > 6) {
+    if (images !== undefined && (images.length) + (listing.imgUrls.length) > 6) {
       setLoading(false)
       toast.error('Max 6 images')
       return
@@ -194,6 +194,7 @@ useEffect(() => {
     }
 
     let imgUrls = listing.imgUrls
+    if(images !== undefined){
     const newImgUrls = await Promise.all(
       [...images].map((image) => storeImage(image))
       
@@ -202,13 +203,18 @@ useEffect(() => {
       toast.error('Images not uploaded')
       return
     })
+  
+  
 
     // For each additional image chosen,
     // ... add to listing.imgUrls array
+    
     newImgUrls.forEach(url => {
       imgUrls = [...imgUrls, url]
     })
-    
+  }else{
+    toast.error('No new images were added to upload')
+  }
     // copy and update formData with new object formDataCopy
     const formDataCopy = {
       ...formData,
@@ -319,6 +325,8 @@ useEffect(() => {
        
        
         
+    } else{
+      return
     }
   }
 
@@ -545,12 +553,13 @@ useEffect(() => {
           <p className='imagesInfo'>
             The first image will be the cover (max 6).
           </p>
+          
           <ul className="propertyImages">
            {  listing.imgUrls && 
               listing.imgUrls.map((referenceImage, index)=>(
               <li key={index}>
               <button className='btn deleteButton'>
-              <img src={referenceImage} alt="property images" width='120' height='100' />
+              <img src={referenceImage} alt="property images" width='180' height='120' />
                 <DeleteIcon 
                 className='' 
                 fill="red" 
@@ -562,6 +571,7 @@ useEffect(() => {
 
           ))}             
           </ul>
+          <label className='formLabel'>Add images</label>
           <input
             className='formInputFile'
             type='file'
@@ -569,10 +579,11 @@ useEffect(() => {
             onChange={onMutate}
             max='6'
             accept='.jpg,.png,.jpeg'
+            placeholder='what?'
             multiple
             
           />
-          
+          <br></br>
           <button type='submit' className='primaryButton editListingButton'>
             Update Listing
           </button>
