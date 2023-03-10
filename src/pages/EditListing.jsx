@@ -105,6 +105,7 @@ useEffect(() => {
 
 
   const onSubmit = async (e) => {
+    // console.log(e.currentTarget)
     e.preventDefault()
 
     setLoading(true)
@@ -116,7 +117,7 @@ useEffect(() => {
       return
     }
 
-    console.log(`images : ${images}`)
+    
     if (images !== undefined && (images.length) + (listing.imgUrls.length) > 6) {
       setLoading(false)
       toast.error('Max 6 images')
@@ -231,7 +232,7 @@ useEffect(() => {
     // Update listing
     const docRef = doc(db, 'listings', params.listingId)
     await updateDoc(docRef, formDataCopy)
-    toast.success('Listing saved')
+    toast.success('Listing saved (1)')
 
    navigate(`/category/${formDataCopy.type}/${docRef.id}`)
     setLoading(false)
@@ -264,20 +265,23 @@ useEffect(() => {
     }
   }
 
+  const onClick = (e) => {
+    e.preventDefault()
+    if(!window.confirm('Are  you sure you want to delete?')){
+      e.preventDefault()
+    } else {
+      // console.log(e.currentTarget)
+      // console.log(e.currentTarget.getAttribute('dataId'))
+      const img = e.currentTarget.getAttribute('dataId')
+      onDelete(img)
+    }
+   
+  }
   const onDelete = async (imageUrl) => {
   
-  if(listing.imgUrls.length <= 1){
-    alert('true')
-    toast.error("Cannot Delete: You must have at least one image in this listing")
-    navigate(`/profile`)
-    return false
-  } 
-
-  if(window.confirm('Are  you sure you want to delete?')){
      let res = listing.imgUrls.filter(elements => {
       return elements !== imageUrl;
      });
-    
      
       setListing({
       ...listing,
@@ -289,9 +293,11 @@ useEffect(() => {
         imgUrls:res,
         timestamp: serverTimestamp(),
       }
+
       const imagesOnly = {
         imgUrls:res
       }
+
       formDataCopy.location = address
       delete formDataCopy.images
       delete formDataCopy.address
@@ -301,16 +307,15 @@ useEffect(() => {
     // Update listing
     
     const docRef = doc(db, 'listings', params.listingId)
-    await updateDoc(docRef, imagesOnly)
-    toast.success('Listing saved')
+
     // navigate(`/category/${formDataCopy.type}/${docRef.id}`)
     
     // delete from the storage
     
     const storage = getStorage()
     const desertRef = ref(storage, imageUrl)
-          
-    //     // 
+
+    
     deleteObject(desertRef).then(() => {
           // File deleted successfully
           // let removeThis = imageUrl
@@ -329,14 +334,9 @@ useEffect(() => {
           toast.error('Not Successfully Deleted')
         //   // Uh-oh, an error occurred!
         });
+        await updateDoc(docRef, imagesOnly)
+        toast.success('Listing saved (2)')
 
-       
-       
-        
-    } else{
-      return
-    }
-  
   }
 
   if (loading) {
@@ -573,12 +573,16 @@ useEffect(() => {
           
             )}
             {listing.imgUrls.length > 1 && (
-              <button className='btn deleteButton rounded'>
+              <button 
+              dataId={referenceImage}
+              className='btn deleteButton rounded'
+              onClick={onClick}
+              >
               <img src={referenceImage} alt="property images" width='180' height='120' />
               <DeleteIcon 
                 className='' 
                 fill="red" 
-                onClick={() => onDelete(referenceImage)}
+               
                 /> 
                 </button>
           )}
