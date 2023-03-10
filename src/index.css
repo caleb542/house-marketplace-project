@@ -448,7 +448,7 @@ button {
   box-sizing: border-box;
   padding:0;
   border-radius:1rem;
-  justify-content: end;
+  justify-content: flex-end;
   align-content: space-around;
   gap: 0.75rem;
 
