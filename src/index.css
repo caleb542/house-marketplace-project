@@ -430,7 +430,12 @@ button {
 .categoryListings {
   padding: 0; 
 }
-
+:is(.offers .categoryListings, .category .categoryListings)
+{
+  display: grid;
+  gap: 1.25rem;
+  padding: 0;
+}
 .categoryListing {
   display: flex;
   /* flex-direction:column; */

@@ -21,7 +21,7 @@ function Offers() {
                 listingsRef, 
                 where('offer', '==', true), 
                 orderBy('timestamp','desc'),
-                limit(3)
+                limit(4)
                 )
 
                 // execute query
@@ -87,7 +87,7 @@ function Offers() {
         }   
     }
   return (
-   <div className="Offers">
+   <div className="offers">
     <header>
         <p className="pageHeader">
             Offers
