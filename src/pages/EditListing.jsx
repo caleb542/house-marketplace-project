@@ -134,7 +134,7 @@ useEffect(() => {
       )
 
       const data = await response.json()
-
+        console.log(data)
       geolocation.lat = data.results[0]?.geometry.location.lat ?? 0
       geolocation.lng = data.results[0]?.geometry.location.lng ?? 0
 
@@ -271,8 +271,8 @@ useEffect(() => {
       e.preventDefault()
     } else {
       // console.log(e.currentTarget)
-      // console.log(e.currentTarget.getAttribute('dataId'))
-      const img = e.currentTarget.getAttribute('dataId')
+      // console.log(e.currentTarget.getAttribute('dataid'))
+      const img = e.currentTarget.getAttribute('dataid')
       onDelete(img)
     }
    
@@ -574,7 +574,7 @@ useEffect(() => {
             )}
             {listing.imgUrls.length > 1 && (
               <button 
-              dataId={referenceImage}
+              dataid={referenceImage}
               className='btn deleteButton rounded'
               onClick={onClick}
               >
