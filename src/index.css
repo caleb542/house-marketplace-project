@@ -108,15 +108,9 @@ button {
 
 .removeIcon {
   cursor: pointer;
-  position: absolute;
-  top: -3%;
-  right: -2%;
 }
 .editIcon {
   cursor: pointer;
-  position: absolute;
-  top: -3.4%;
-  right: 20px;
 }
 
 .pageContainer,
@@ -439,14 +433,32 @@ button {
 
 .categoryListing {
   display: flex;
+  /* flex-direction:column; */
   justify-content: space-between;
-  align-items: center;
+  align-items: left;
   margin-bottom: 1rem;
   position: relative;
+  border-radius:1rem;
 }
+.categoryListingEditBar{
+  display: flex;
+  position: absolute;
+  width: auto;
+  right:0;
+  top:0rem;
+  box-sizing: border-box;
+  padding:0rem 1rem 0 1rem;
+  border-radius:1rem;
+  justify-content: end;
+  align-content: space-around;
+  gap: 1rem;
 
+
+}
 .categoryListingLink {
-  display: contents;
+  display: flex;
+  padding:2rem 0rem;
+
 }
 .listingsText{
   padding:0;
@@ -466,11 +478,13 @@ button {
 }
 
 .categoryListingDetails {
-  width: 65%;
+  width: auto;
+  padding-left:.5rem;
 }
 @media (min-width: 1024px) {
   .categoryListingDetails {
     width: 79%;
+    padding-left:1rem;
   }
 }
 
@@ -478,6 +492,7 @@ button {
   font-weight: 600;
   font-size: 0.7rem;
   opacity: 0.8;
+  margin-top:0;
   margin-bottom: 0;
 }
 

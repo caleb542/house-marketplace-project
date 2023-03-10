@@ -7,6 +7,22 @@ import bathtubIcon from '../assets/svg/bathtubIcon.svg'
 function ListingItem({ listing, id, onEdit, onDelete }) {
   return (
     <li className="categoryListing">
+        <div className="categoryListingEditBar">                    
+            {onEdit && (
+                <EditIcon 
+                className='editIcon'
+                onClick={() => onEdit(id)}
+                />
+            )}
+            {onDelete && (
+                <DeleteIcon 
+                className='removeIcon' 
+                fill="rgb(231, 76, 60)" 
+                onClick={() => onDelete(listing.id, listing.name)}
+                />
+            )}
+           
+        </div>    
         <Link 
             to={`/category/${listing.type}/${id}`}
             className='categoryListingLink'>
@@ -46,20 +62,6 @@ function ListingItem({ listing, id, onEdit, onDelete }) {
                     </div>
                 </div>    
             </Link>
-
-            {onDelete && (
-                <DeleteIcon 
-                className='removeIcon' 
-                fill="rgb(231, 76, 60)" 
-                onClick={() => onDelete(listing.id, listing.name)}
-                />
-            )}
-            {onEdit && (
-                <EditIcon 
-                className='editIcon'
-                onClick={() => onEdit(id)}
-                />
-            )}
     </li>
   )
 }
