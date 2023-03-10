@@ -11,12 +11,14 @@ function ListingItem({ listing, id, onEdit, onDelete }) {
             {onEdit && (
                 <EditIcon 
                 className='editIcon'
+               
+                fill="rgb(0, 204, 102)"
                 onClick={() => onEdit(id)}
                 />
             )}
             {onDelete && (
                 <DeleteIcon 
-                className='removeIcon' 
+                className='removeIcon'
                 fill="rgb(231, 76, 60)" 
                 onClick={() => onDelete(listing.id, listing.name)}
                 />
