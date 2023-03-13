@@ -10,23 +10,49 @@ function Offers() {
     const [loading, setLoading] = useState(true)
     const [lastFetchedListing, setLastFetchedListing] = useState(null)
 
+    const [totalLoaded, setTotalLoaded ] = useState(null)
+
+    const [totalOffers, setTotalOffers] = useState(null)
+
     useEffect(() => {
         const fetchListings = async () => {
             try {
+            // Get Total
+               // get reference           
+               const listingsRef1 = collection(db, 'listings')
+
+               // create a query
+               const q1 = query(
+                listingsRef1, 
+                where('offer', '==', true), 
+                orderBy('timestamp','desc')
+                )
+
+                // execute query
+                const querySnap1 = await getDocs(q1)
+             
+                const offersCount = querySnap1.docs.length;
+
+                setTotalOffers(offersCount)
+
+            //Get limited results
+            
                 // Get reference
                const listingsRef = collection(db, 'listings')
 
                // create a query
+               let limitFirstLoad = 4;
+
                const q = query(
                 listingsRef, 
                 where('offer', '==', true), 
                 orderBy('timestamp','desc'),
-                limit(4)
+                limit(limitFirstLoad)
                 )
-
+                setTotalLoaded(limitFirstLoad) 
                 // execute query
                 const querySnap = await getDocs(q)
-
+      
                 const lastVisible = querySnap.docs[querySnap.docs.length -1]
                 setLastFetchedListing(lastVisible)
 
@@ -56,22 +82,29 @@ function Offers() {
            const listingsRef = collection(db, 'listings')
 
            // create a query
+            const addListingsNumber = 3
+
            const q = query(
             listingsRef, 
             where('offer', '==', true), 
             orderBy('timestamp','desc'),
             startAfter(lastFetchedListing),
-            limit(3)
+            limit(addListingsNumber)
             )
+           if(totalLoaded + addListingsNumber > totalOffers)  {
+            setTotalLoaded( totalOffers )
 
+        } else {
+            setTotalLoaded( totalLoaded + addListingsNumber)
+        }
             // execute query
             const querySnap = await getDocs(q)
+            
 
             const lastVisible = querySnap.docs[querySnap.docs.length -1]
             setLastFetchedListing(lastVisible)
 
             const listings = []
-
             querySnap.forEach((doc)=>{
                 return listings.push({
                     id: doc.id,
@@ -90,7 +123,7 @@ function Offers() {
    <div className="offers">
     <header>
         <p className="pageHeader">
-            Offers
+            Offers ({totalLoaded }/{totalOffers})
         </p>
     </header>
     {loading ? (
@@ -112,7 +145,7 @@ function Offers() {
         </main>
         <br />
         <br />
-        {lastFetchedListing && (
+        {totalOffers !== totalLoaded && lastFetchedListing && (
             <p 
             className="loadMore"
             onClick={onFetchMoreListings}>

@@ -18,22 +18,45 @@ function Category() {
     const [listings, setListings] = useState(null)
     const [loading, setLoading] = useState(true)
     const [lastFetchedListing, setLastFetchedListing] = useState(null)
+    const [totalLoaded, setTotalLoaded ] = useState(null)
+
+    const [totalCategories, setTotalCategories] = useState(null)
     const params = useParams()
 
     useEffect(() => {
         const fetchListings = async () => {
             try {
+                  // Get Total
+               // get reference           
+               const listingsRef1 = collection(db, 'listings')
+
+               // create a query
+               const q1 = query(
+                listingsRef1, 
+                where('type', '==', params.categoryName),
+                orderBy('timestamp','desc')
+                )
+
+                // execute query
+                const querySnap1 = await getDocs(q1)
+             
+                const categoriesCount = querySnap1.docs.length;
+
+                setTotalCategories(categoriesCount)
                 // Get reference
                const listingsRef = collection(db, 'listings')
 
                // create a query
+               
+                let limitFirstLoad = 4;        
                const q = query(
                 listingsRef, 
                 where('type', '==', params.categoryName), 
                 orderBy('timestamp','desc'),
-                limit(5)
+                limit(limitFirstLoad)
                 )
 
+                 setTotalLoaded(limitFirstLoad) 
                 // execute query
                 const querySnap = await getDocs(q)
 
@@ -67,13 +90,23 @@ function Category() {
            const listingsRef = collection(db, 'listings')
 
            // create a query
+
+            const addListingsNumber = 3
+
            const q = query(
             listingsRef, 
             where('type', '==', params.categoryName), 
             orderBy('timestamp','desc'),
             startAfter(lastFetchedListing),
-            limit(5)
+            limit(addListingsNumber)
             )
+
+             if(totalLoaded + addListingsNumber > totalCategories)  {
+            setTotalLoaded( totalCategories )
+
+            } else {
+                setTotalLoaded( totalLoaded + addListingsNumber)
+            }
 
             // execute query
             const querySnap = await getDocs(q)
@@ -103,6 +136,7 @@ function Category() {
     <header>
         <p className="pageHeader">
             {params.categoryName === 'rent' ? 'Places for rent':'Places for sale'}
+            ({totalLoaded }/{totalCategories})
         </p>
     </header>
     {loading ? (
@@ -125,7 +159,8 @@ function Category() {
         <br />
         <br />
         <br />
-        {lastFetchedListing && (
+        {totalCategories !== totalLoaded && 
+            lastFetchedListing && (
             <p 
             className="loadMore"
             onClick={onFetchMoreListings}>

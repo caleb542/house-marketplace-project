@@ -232,7 +232,7 @@ useEffect(() => {
     // Update listing
     const docRef = doc(db, 'listings', params.listingId)
     await updateDoc(docRef, formDataCopy)
-    toast.success('Listing saved (1)')
+    toast.success('Listing saved!')
 
    navigate(`/category/${formDataCopy.type}/${docRef.id}`)
     setLoading(false)
@@ -335,7 +335,7 @@ useEffect(() => {
         //   // Uh-oh, an error occurred!
         });
         await updateDoc(docRef, imagesOnly)
-        toast.success('Listing saved (2)')
+        toast.success('Listing saved!')
 
   }
 
