@@ -85,7 +85,6 @@ function EditListing() {
   
   }, [navigate, params.listingId])
 
-// sets userRef to loggedin user
 useEffect(() => {
     if (isMounted) {
       onAuthStateChanged(auth, (user) => {

@@ -6,7 +6,7 @@ import bathtubIcon from '../assets/svg/bathtubIcon.svg'
 
 function ListingItem({ listing, id, onEdit, onDelete }) {
   return (
-    <li className="categoryListing">
+   <>
         <div className="categoryListingEditBar">                    
             {onEdit && (
                 <EditIcon 
@@ -64,7 +64,7 @@ function ListingItem({ listing, id, onEdit, onDelete }) {
                     </div>
                 </div>    
             </Link>
-    </li>
+</>
   )
 }
 

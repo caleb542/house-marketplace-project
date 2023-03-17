@@ -101,12 +101,17 @@ function Category() {
             limit(addListingsNumber)
             )
 
-             if(totalLoaded + addListingsNumber > totalCategories)  {
-            setTotalLoaded( totalCategories )
+           
 
-            } else {
-                setTotalLoaded( totalLoaded + addListingsNumber)
+            function setDelay(){
+                if(totalLoaded + addListingsNumber > totalCategories)  {
+                    setTotalLoaded( totalCategories )
+        
+                    } else {
+                        setTotalLoaded( totalLoaded + addListingsNumber)
+                    }
             }
+            setTimeout( setDelay, 1800)
 
             // execute query
             const querySnap = await getDocs(q)
@@ -136,7 +141,6 @@ function Category() {
     <header>
         <p className="pageHeader">
             {params.categoryName === 'rent' ? 'Places for rent':'Places for sale'}
-            ({totalLoaded }/{totalCategories})
         </p>
     </header>
     {loading ? (
@@ -145,14 +149,15 @@ function Category() {
         <>
         <main>
             <ul className="categoryListings">
-            {listings.map((listing) => (
-                <ListingItem 
-                    listing={listing.data}
-                    id={listing.id }
-                    key={listing.id}
-                   
-                />
+            {listings.map((listing, index) => (
+                <li  key={index} className="categoryListing"  style={{ animation: `card 1s ease-in-out forwards ${index * 0.1}s`}} >
+                    <ListingItem 
+                        listing={listing.data}
+                        id={listing.id }
+                        key={listing.id}
                     
+                    />
+                </li>
             ))}
             </ul>
         </main>
@@ -161,12 +166,15 @@ function Category() {
         <br />
         {totalCategories !== totalLoaded && 
             lastFetchedListing && (
-            <p 
+            <button 
             className="loadMore"
             onClick={onFetchMoreListings}>
             Load More
-            </p>
+            </button>
         )}
+        <p className="paginationText">
+        Showing {totalLoaded } of {totalCategories}
+        </p>
        
         </>
     ) : (

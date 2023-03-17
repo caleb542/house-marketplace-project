@@ -469,7 +469,8 @@ button {
 }
 
 .categoryListingImg {
-  width: 30%;
+  width: auto;
+  aspect-ratio:4/3;
   height: 100px;
   border-radius: 1.5rem;
   object-fit: cover;
@@ -530,16 +531,69 @@ button {
 
 .categoryListingInfoDiv {
   display: flex;
-  justify-content: space-between;
   max-width: 275px;
+  gap:0.5rem;
 }
 
 .categoryListingInfoText {
   font-weight: 500;
   font-size: 0.7rem;
 }
-
+.categoryListing{
+  opacity:0;
+  transform:translate(-700px, 0);
+  animation:card 0.5s linear  ;
+}
+@keyframes card {
+  0% {
+    display:inline-block;
+    transform:translate(-700px, 0);
+    opacity:0;
+  
+  }
+  20% {opacity:0;}
+  70% {
+    display:inline-block;
+    transform:translate(0px, 0);
+  }
+  100% {
+    display:inline-block;
+    opacity:1;
+    transform:translate(0, 0);
+  }
+}
+.pagination {
+  position: relative;
+  width:100%;
+  /* background-color: rgb(0 0 0 / 10%); */
+  transition:all 1s;
+  
+}
+.paginationText {
+  display: block;
+  width:100%;
+  text-align: center;
+  margin:0 auto;
+  padding:1rem 0;
+  opacity:0;
+  animation:pag 0.6s ease-in-out forwards 0.2s;
+}
+@keyframes pag {
+  0% {
+    opacity:0;
+    transform:translate(0px, 50px);
+  }
+  80% {
+    opacity:0.6;
+    transform:translate(0,0);
+  }
+  100% {
+    opacity:1;
+    transform:translate(0,0);
+  }
+}
 .loadMore {
+  display:block;
   cursor: pointer;
   width: 8rem;
   margin: 0 auto;
@@ -551,6 +605,7 @@ button {
   border-radius: 1rem;
   opacity: 0.7;
   margin-top: 2rem;
+  line-height:1.5rem;
 }
 
 .listingDetails {

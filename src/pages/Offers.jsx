@@ -4,6 +4,8 @@ import {db} from '../firebase.config'
 import {toast} from 'react-toastify'
 import Spinner from '../components/Spinner'
 import ListingItem from '../components/ListingItem'
+import PaginationText from '../components/PaginationText'
+import {motion, AnimatePresence} from 'framer-motion'
 
 function Offers() {
     const [listings, setListings] = useState(null)
@@ -49,7 +51,9 @@ function Offers() {
                 orderBy('timestamp','desc'),
                 limit(limitFirstLoad)
                 )
-                setTotalLoaded(limitFirstLoad) 
+
+                setTotalLoaded(limitFirstLoad)
+               
                 // execute query
                 const querySnap = await getDocs(q)
       
@@ -91,12 +95,19 @@ function Offers() {
             startAfter(lastFetchedListing),
             limit(addListingsNumber)
             )
-           if(totalLoaded + addListingsNumber > totalOffers)  {
-            setTotalLoaded( totalOffers )
+            
+            function setDelay(){
+                if(totalLoaded + addListingsNumber > totalOffers)  {
+                    setTotalLoaded( totalOffers )
+        
+                    } else {
+                        setTotalLoaded( totalLoaded + addListingsNumber)
+                    }
+            }
+            setTimeout( setDelay, 1800)
 
-        } else {
-            setTotalLoaded( totalLoaded + addListingsNumber)
-        }
+          
+            
             // execute query
             const querySnap = await getDocs(q)
             
@@ -123,7 +134,7 @@ function Offers() {
    <div className="offers">
     <header>
         <p className="pageHeader">
-            Offers ({totalLoaded }/{totalOffers})
+            Offers
         </p>
     </header>
     {loading ? (
@@ -132,26 +143,39 @@ function Offers() {
         <>
         <main>
             <ul className="categoryListings">
-            {listings.map((listing) => (
-                <ListingItem 
-                    listing={listing.data}
-                    id={listing.id }
-                    key={listing.id}
-                   
-                />
-                    
-            ))}
+            
+                {listings.map((listing, index) => (
+                    <li  key={index} className="categoryListing"  style={{ animation: `card 1s ease-in-out forwards ${index * 0.1}s`}} >
+                        <ListingItem 
+                       
+                            listing={listing.data}
+                            id={listing.id }
+                           
+                        
+                        />
+                    </li>
+                ))}
+           
             </ul>
         </main>
         <br />
         <br />
-        {totalOffers !== totalLoaded && lastFetchedListing && (
-            <p 
-            className="loadMore"
-            onClick={onFetchMoreListings}>
-            Load More
-            </p>
-        )}
+        <div className="pagination">
+            {totalOffers !== totalLoaded && lastFetchedListing && (
+                <button 
+                className="loadMore"
+                onClick={onFetchMoreListings}>
+                Load More
+                </button>
+            )}
+            <PaginationText
+                totalLoaded={totalLoaded}
+                totalOffers={totalOffers}
+            />
+
+          
+        </div>
+       
         </>
     ) : (
         <p>There are no current offers</p>

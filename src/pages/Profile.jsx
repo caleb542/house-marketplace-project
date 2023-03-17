@@ -4,6 +4,7 @@ import { toast } from 'react-toastify'
 import { getAuth, updateProfile } from 'firebase/auth'
 import {db} from '../firebase.config'
 import { updateDoc, doc, collection, getDocs, query, where, orderBy, deleteDoc} from 'firebase/firestore'
+import { storage, getStorage, ref, deleteObject } from 'firebase/storage'
 import arrowRight from '../assets/svg/keyboardArrowRightIcon.svg'
 import homeIcon from '../assets/svg/homeIcon.svg'
 import ListingItem from '../components/ListingItem'
@@ -86,7 +87,27 @@ function Profile() {
   }
   
   const onDelete = async (listingId) => {
+
+    const listing = listings.find((item) => item.id === listingId)
+    const listingImages = listing.data.imgUrls
+
     if(window.confirm('Are  you sure you want to delete?')){
+
+      // Delete the Images from Storage
+      const storage = getStorage()
+
+      listingImages.forEach(image => {
+        const desertRef = ref(storage, image)
+
+        deleteObject(desertRef).then(() => {
+          toast.success('Image removed from storage')
+        }
+        ).catch((error) => {
+          console.log(error)
+          toast.error('Image could not be deleted')
+        });
+      })
+      // Delete the listing
         await deleteDoc(doc(db, 'listings', listingId))
         const updatedListings = listings.filter((listing) => listing.id !== listingId)
           
@@ -134,15 +155,19 @@ function Profile() {
           <>
           <p className="listingText">Your Listings ({listings?.length})</p>
           <ul className="listingsText">
-            {listings.map((listing, index) => (
-             <ListingItem 
-                key={listing.id}
-                listing={listing.data}
-                id={listing.id}
-                onEdit={() => onEdit(listing.id)}
-                onDelete={() => onDelete(listing.id)}
-              />
-            ))}
+          {listings.map((listing, index) => (
+           <li  key={index} className="categoryListing"  style={{ animation: `card 1s ease-in-out forwards ${index * 0.1}s`}} >
+            
+              <ListingItem 
+                  key={listing.id}
+                  listing={listing.data}
+                  id={listing.id}
+                  onEdit={() => onEdit(listing.id)}
+                  onDelete={() => onDelete(listing.id)}
+                />
+                </li>
+              ))}
+            
           </ul>
           
           </>

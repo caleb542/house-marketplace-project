@@ -3,6 +3,7 @@ import { useParams, useSearchParams } from 'react-router-dom'
 import { doc, getDoc } from 'firebase/firestore'
 import { db } from '../firebase.config'
 import { toast } from 'react-toastify'
+import { updateProfile } from 'firebase/auth'
 
 function Contact() {
     const [message, setMessage] = useState('')
@@ -11,7 +12,9 @@ function Contact() {
     const [searchParams, setSearchParams] = useSearchParams()
 
     const params = useParams()
-
+    const urlValidName = searchParams.get('listingName')
+    urlValidName.replace("&","%26")
+   
     useEffect(() => {
         
         const getLandlord = async () => {
@@ -29,7 +32,7 @@ function Contact() {
         getLandlord()
     },[params.landlordId])
 
-    const onChange = (e) => setMessage(e.target.value)
+    const onChange = (e) => setMessage((e.target.value).replace('&','%26'))
     
     
   return (
@@ -51,12 +54,12 @@ function Contact() {
                         className='textarea'
                         name="message" 
                         id="message"
-                        value={message}
+                        value={message.replace('&','%26')}
                         onChange={onChange}
                         ></textarea>
                     </div>
 
-                    <a href={`mailto:${landlord.email}?Subject=${searchParams.get('listingName')}&Body=${message}`}>
+                    <a href={`mailto:${landlord.email}?Subject=${urlValidName}&Body=${message.replace('&','%26')}`}>'
                         <button type="button" className="primaryButton">
                         Send Message
                         </button>
