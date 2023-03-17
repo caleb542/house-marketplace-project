@@ -5,7 +5,7 @@ import {toast} from 'react-toastify'
 import Spinner from '../components/Spinner'
 import ListingItem from '../components/ListingItem'
 import PaginationText from '../components/PaginationText'
-import {motion, AnimatePresence} from 'framer-motion'
+
 
 function Offers() {
     const [listings, setListings] = useState(null)
