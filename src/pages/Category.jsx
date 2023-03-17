@@ -56,7 +56,7 @@ function Category() {
                 limit(limitFirstLoad)
                 )
 
-                 setTotalLoaded(limitFirstLoad) 
+                
                 // execute query
                 const querySnap = await getDocs(q)
 
@@ -75,6 +75,17 @@ function Category() {
                 setListings(listings)
                 setLoading(false)
 
+                let listingsCount = listings.length
+
+                let resultsShowing
+                if(listingsCount < limitFirstLoad)  {
+                    resultsShowing = listingsCount 
+                    
+                } else{
+                    resultsShowing = limitFirstLoad
+                    
+                }
+                setTotalLoaded(resultsShowing)
             } catch (error){
                 toast.error("Could not fetch the listings")
             }   
@@ -164,9 +175,10 @@ function Category() {
         <br />
         <br />
         <br />
-        {totalCategories !== totalLoaded && 
+        {
             lastFetchedListing && (
             <button 
+            disabled={totalCategories > totalLoaded ? false:true}
             className="loadMore"
             onClick={onFetchMoreListings}>
             Load More

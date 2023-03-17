@@ -52,8 +52,12 @@ function Offers() {
                 limit(limitFirstLoad)
                 )
 
-                setTotalLoaded(limitFirstLoad)
                
+
+               
+              
+
+
                 // execute query
                 const querySnap = await getDocs(q)
       
@@ -62,6 +66,8 @@ function Offers() {
 
                 const listings = []
 
+                
+                
                 querySnap.forEach((doc)=>{
                     return listings.push({
                         id: doc.id,
@@ -72,6 +78,17 @@ function Offers() {
                 setListings(listings)
                 setLoading(false)
 
+                let listingsCount = listings.length
+
+                let offersShowing
+                if(listingsCount < limitFirstLoad)  {
+                    offersShowing = listingsCount 
+                    
+                } else{
+                    offersShowing = limitFirstLoad
+                    
+                }
+                setTotalLoaded(offersShowing)
             } catch (error){
                 toast.error("Could not fetch the listings")
             }   
@@ -86,7 +103,7 @@ function Offers() {
            const listingsRef = collection(db, 'listings')
 
            // create a query
-            const addListingsNumber = 3
+            const addListingsNumber = 2
 
            const q = query(
             listingsRef, 
@@ -96,15 +113,20 @@ function Offers() {
             limit(addListingsNumber)
             )
             
-            function setDelay(){
-                if(totalLoaded + addListingsNumber > totalOffers)  {
-                    setTotalLoaded( totalOffers )
-        
-                    } else {
-                        setTotalLoaded( totalLoaded + addListingsNumber)
-                    }
+            let offersShowing
+            if(totalLoaded + addListingsNumber > totalOffers)  {
+                offersShowing =  totalOffers 
+                alert(offersShowing)
+    
+            } else {
+                offersShowing = totalLoaded + addListingsNumber
             }
-            setTimeout( setDelay, 1800)
+            
+            setTotalLoaded(offersShowing)
+            // function setDelay(){
+            //     setTotalLoaded(offersShowing)
+            // }        
+            // setTimeout( setDelay, 1800)
 
           
             
@@ -161,8 +183,9 @@ function Offers() {
         <br />
         <br />
         <div className="pagination">
-            {totalOffers !== totalLoaded && lastFetchedListing && (
+            {lastFetchedListing && (
                 <button 
+                disabled={totalOffers > totalLoaded ? false : true}
                 className="loadMore"
                 onClick={onFetchMoreListings}>
                 Load More

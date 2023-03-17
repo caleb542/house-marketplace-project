@@ -53,14 +53,19 @@ function ListingItem({ listing, id, onEdit, onDelete }) {
                     {listing.type === 'rent' && ' / Month'}    
                     </p>
                     <div className="categoryListingInfoDiv">
-                        <img src={bedIcon} alt="bed" />
+                        
+                    <div>
+                    <img src={bedIcon} alt="bed" />
                         <p className="categoryListingInfoText">
                             {listing.bedrooms > 1 ? `${listing.bedrooms} Bedrooms` : '1 Bedroom'}
                         </p>
+                        </div>
+                        <div>
                         <img src={bathtubIcon} alt="bath" />
                         <p className="categoryListingInfoText">
                         {listing.bathrooms > 1 ? `${listing.bathrooms} Bathrooms` : '1 Bathroom'}
                         </p>
+                        </div>
                     </div>
                 </div>    
             </Link>
