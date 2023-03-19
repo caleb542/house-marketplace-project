@@ -116,7 +116,6 @@ function Offers() {
             let offersShowing
             if(totalLoaded + addListingsNumber > totalOffers)  {
                 offersShowing =  totalOffers 
-                alert(offersShowing)
     
             } else {
                 offersShowing = totalLoaded + addListingsNumber
