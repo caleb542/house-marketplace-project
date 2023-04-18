@@ -24,7 +24,9 @@ button {
   outline: none;
   border: none;
 }
-
+button:hover{
+  cursor:pointer;
+}
 .input,
 .passwordInput,
 .emailInput,
