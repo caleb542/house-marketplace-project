@@ -905,6 +905,9 @@ button {
   justify-content: center;
   align-items: center;
 }
+.formInputFile:hover{
+  cursor:pointer;
+}
 .formButtonActive {
   background-color: #00cc66;
   color: #ffffff;
