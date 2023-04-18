@@ -449,7 +449,7 @@ button {
   position: absolute;
   width: auto;
   right: 0rem;
-  top: -0.75rem;
+  top: 0;
   box-sizing: border-box;
   padding: 0;
   border-radius: 1rem;
